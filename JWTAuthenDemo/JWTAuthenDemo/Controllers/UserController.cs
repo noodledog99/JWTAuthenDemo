@@ -74,36 +74,36 @@ namespace JWTAuthenDemo.Controllers
 
         private string GenerateJSONWebToken(User userData)
         {
-            //var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            //var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            //var claims = new[]
-            //{
-            //    new Claim(JwtRegisteredClaimNames.Sub,userData.UserId),
-            //    new Claim(JwtRegisteredClaimNames.,userData.Email),
-            //    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-            //};
-
-            //var token = new JwtSecurityToken(
-            //    issuer: _config["Jwt:Issuer"],
-            //    audience: _config["Jwt:Issuer"],
-            //    claims,
-            //    expires: DateTime.Now.AddMinutes(120),
-            //    signingCredentials: credentials);
-
-            //var encodeToken = new JwtSecurityTokenHandler().WriteToken(token);
-            //return encodeToken;
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var claims = new[]
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", userData.UserId.ToString()) }),
-                Expires = DateTime.UtcNow.AddMinutes(5),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+               new Claim(JwtRegisteredClaimNames.Sub,userData.UserId),
+            //    new Claim(JwtRegisteredClaimNames.,userData.Email),
+               new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+
+            var token = new JwtSecurityToken(
+               issuer: _config["Jwt:Issuer"],
+               audience: _config["Jwt:Issuer"],
+               claims,
+               expires: DateTime.Now.AddMinutes(120),
+               signingCredentials: credentials);
+
+            var encodeToken = new JwtSecurityTokenHandler().WriteToken(token);
+            return encodeToken;
+
+            // var tokenHandler = new JwtSecurityTokenHandler();
+            // var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
+            // var tokenDescriptor = new SecurityTokenDescriptor
+            // {
+            //     Subject = new ClaimsIdentity(new[] { new Claim("id", userData.UserId.ToString()) }),
+            //     Expires = DateTime.UtcNow.AddMinutes(5),
+            //     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+            // };
+            // var token = tokenHandler.CreateToken(tokenDescriptor);
+            // return tokenHandler.WriteToken(token);
         }
 
         [HttpPost]
